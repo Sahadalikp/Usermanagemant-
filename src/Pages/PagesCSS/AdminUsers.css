@@ -368,3 +368,15 @@
     border-radius: 8px;
     cursor: pointer;
 }
+.admin-btn {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-btn:hover {
+  background: #5b21b6;
+}

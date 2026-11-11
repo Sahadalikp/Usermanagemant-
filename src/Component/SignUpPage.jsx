@@ -13,7 +13,9 @@ function SignUpPage() {
   const[fromdata,setFromdata]=useState({
     name:"",
     email:"",
-    password:""
+    password:"",
+    
+
   });
 
   const handleChange = (e)=>{

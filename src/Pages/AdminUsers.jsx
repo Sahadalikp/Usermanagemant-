@@ -232,6 +232,27 @@ function AdminUsers() {
         setSearchTerm('')
         setStatusFilter('all')
     }
+    const handleMakeAdmin = async (user) => {
+        const confirmAdmin = window.confirm(
+            `${user.name} ne Admin aakkan aano?`
+        )
+
+        if (!confirmAdmin) return
+
+        try {
+            await api.patch(`users/${user.id}`, {
+                role: 'admin'
+            })
+
+            setUsers((prevUsers) =>
+                prevUsers.filter((item) => item.id !== user.id)
+            )
+
+            alert('User successfully promoted to Admin!')
+        } catch (error) {
+            alert('Failed to make Admin')
+        }
+    }
 
     return (
         <div className="admin-users">
@@ -329,39 +350,46 @@ function AdminUsers() {
                                         </td>
 
                                         <td>
-                                    <div className="user-actions">
+                                            <div className="user-actions">
 
-                                        <button
-                                            className="edit-btn"
-                                            onClick={() => handleEdit(user)}
-                                        >
-                                            Edit
-                                        </button>
+                                                <button
+                                                    className="edit-btn"
+                                                    onClick={() => handleEdit(user)}
+                                                >
+                                                    Edit
+                                                </button>
 
-                                        <button
-                                            className="status-btn"
-                                            onClick={() => handleStatus(user)}
-                                        >
-                                            {user.active === false
-                                                ? 'Activate'
-                                                : 'Deactivate'}
-                                        </button>
+                                                <button
+                                                    className="status-btn"
+                                                    onClick={() => handleStatus(user)}
+                                                >
+                                                    {user.active === false
+                                                        ? 'Activate'
+                                                        : 'Deactivate'}
+                                                </button>
 
-                                        <button
-                                                className="view-btn"
-                                                onClick={() => setViewUser(user)}
-                                            >
-                                            View
-                                        </button>
+                                                <button
+                                                    className="view-btn"
+                                                    onClick={() => setViewUser(user)}
+                                                >
+                                                    View
+                                                </button>
 
-                                        <button
-                                            className="delete-btn"
-                                            onClick={() => handleDelete(user)}
-                                        >
-                                            Delete
-                                        </button>
+                                                <button
+                                                    className="delete-btn"
+                                                    onClick={() => handleDelete(user)}
+                                                >
+                                                    Delete
+                                                </button>
 
-                                    </div>
+                                                <button
+                                                    className="admin-btn"
+                                                    onClick={() => handleMakeAdmin(user)}
+                                                >
+                                                    Make Admin
+                                                </button>
+
+                                            </div>
                                         </td>
 
                                     </tr>
@@ -382,66 +410,66 @@ function AdminUsers() {
                 </div>
             )}
             {/* View User Details */}
-    {viewUser && (
-        <div className="edit-overlay">
+            {viewUser && (
+                <div className="edit-overlay">
 
-            <div className="view-user-card">
+                    <div className="view-user-card">
 
-                <h3>User Details</h3>
+                        <h3>User Details</h3>
 
-                <div className="view-user-photo">
-                    {viewUser.image ? (
-                        <img
-                            src={viewUser.image}
-                            alt={viewUser.name}
-                        />
-                    ) : (
-                        <div className="user-avatar">
-                            {viewUser.name?.charAt(0).toUpperCase()}
+                        <div className="view-user-photo">
+                            {viewUser.image ? (
+                                <img
+                                    src={viewUser.image}
+                                    alt={viewUser.name}
+                                />
+                            ) : (
+                                <div className="user-avatar">
+                                    {viewUser.name?.charAt(0).toUpperCase()}
+                                </div>
+                            )}
                         </div>
-                    )}
+
+                        <div className="user-detail">
+                            <strong>Name:</strong>
+                            <span>{viewUser.name}</span>
+                        </div>
+
+                        <div className="user-detail">
+                            <strong>Email:</strong>
+                            <span>{viewUser.email}</span>
+                        </div>
+
+                        <div className="user-detail">
+                            <strong>User ID:</strong>
+                            <span>{viewUser.id}</span>
+                        </div>
+
+                        <div className="user-detail">
+                            <strong>Role:</strong>
+                            <span>{viewUser.role || 'user'}</span>
+                        </div>
+
+                        <div className="user-detail">
+                            <strong>Status:</strong>
+                            <span>
+                                {viewUser.active === false
+                                    ? 'Inactive'
+                                    : 'Active'}
+                            </span>
+                        </div>
+
+                        <button
+                            className="close-view-btn"
+                            onClick={() => setViewUser(null)}
+                        >
+                            Close
+                        </button>
+
+                    </div>
+
                 </div>
-
-                <div className="user-detail">
-                    <strong>Name:</strong>
-                    <span>{viewUser.name}</span>
-                </div>
-
-                <div className="user-detail">
-                    <strong>Email:</strong>
-                    <span>{viewUser.email}</span>
-                </div>
-
-                <div className="user-detail">
-                    <strong>User ID:</strong>
-                    <span>{viewUser.id}</span>
-                </div>
-
-                <div className="user-detail">
-                    <strong>Role:</strong>
-                    <span>{viewUser.role || 'user'}</span>
-                </div>
-
-                <div className="user-detail">
-                    <strong>Status:</strong>
-                    <span>
-                        {viewUser.active === false
-                            ? 'Inactive'
-                            : 'Active'}
-                    </span>
-                </div>
-
-                <button
-                    className="close-view-btn"
-                    onClick={() => setViewUser(null)}
-                >
-                    Close
-                </button>
-
-            </div>
-
-        </div>
-    )}
+            )}
 
             {/* Edit User Form */}
             {selectedUser && (
